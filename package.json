@@ -17,7 +17,8 @@
   "author": "Arnout Kazemier",
   "license": "MIT",
   "dependencies": {
-    "extendable": "0.0.x"
+    "extendable": "0.0.x",
+    "xregexp": "2.0.x"
   },
   "devDependencies": {
     "mocha": "1.4.x",

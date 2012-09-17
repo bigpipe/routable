@@ -80,11 +80,12 @@ Object.defineProperty(Route.prototype, 'url', {
 /**
  * Check if url matches the route.
  *
- * @param {String} url
+ * @param {String} uri
  * @returns {Boolean}
  */
-Route.prototype.test = function test(url) {
-  return xRegExp(this.pattern, this.flags).test(url);
+Route.prototype.test = function test(uri) {
+  if (typeof uri === 'string') uri = url.parse(uri);
+  return xRegExp(this.pattern, this.flags).test(url.pathname);
 };
 
 /**
@@ -98,7 +99,7 @@ Route.prototype.exec = function exec(uri) {
   if (typeof uri === 'string') uri = url.parse(uri);
 
   var re = xRegExp(this.pattern, this.flags)
-    , result = re.exec(uri.path);
+    , result = re.exec(uri.pathname);
 
   if (!result) return false;
 
