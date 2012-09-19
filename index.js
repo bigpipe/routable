@@ -85,7 +85,7 @@ Object.defineProperty(Route.prototype, 'url', {
  */
 Route.prototype.test = function test(uri) {
   if (typeof uri === 'string') uri = url.parse(uri);
-  return xRegExp(this.pattern, this.flags).test(url.pathname);
+  return xRegExp(this.pattern, this.flags).test(uri.pathname);
 };
 
 /**
