@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "mocha": "1.4.x",
-    "chai": "1.2.x"
+    "chai": "1.2.x",
+    "dox": "0.4.1",
+    "ejs": "0.8.3"
   }
 }

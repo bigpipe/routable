@@ -1,0 +1,19 @@
+# API documentation
+
+<% jsdoc.forEach(function (api) { %>
+### routable.<%- api.ctx.name %><%- api.ctx.invocation %>
+<%- api.description.full %>
+
+<% if (api.params.length) { %>
+#### Arguments
+<% api.params.forEach(function (param) { %>
+- **<%= param.name %>** _<%= param.types.join(', ') %>_ <%= param.description %>
+<% }) %>
+<% } %>
+
+#### Implementation
+```js
+<%- api.code %>
+```
+---------------------------------------
+<% }) %>
