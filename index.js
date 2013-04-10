@@ -4,6 +4,7 @@ var url = require('url')
   , xRegExp = require('xregexp').XRegExp;
 
 /**
+ * HTTP Route
  *
  * @constructor
  * @param {String|RegExp} url url to match against
@@ -23,13 +24,27 @@ var Route = module.exports = function Route(url) {
 
 Object.defineProperty(Route.prototype, 'url', {
     enumerable: false
+
+    /**
+     * Returns the compiled version of a url.
+     *
+     * @returns {String}
+     */
   , get: function get() {
       return this._url.toString();
     }
 
+    /**
+     * Parse the url.
+     *
+     * @param {Mixed} uri The uri that needs to be parsed.
+     */
   , set: function set(uri) {
       var self = this;
 
+      //
+      // We're already a regular expression, no need to parse it further.
+      //
       if (uri instanceof RegExp) {
         this._url = uri;
         this.pattern = uri.source;
@@ -42,6 +57,9 @@ Object.defineProperty(Route.prototype, 'url', {
         return;
       }
 
+      //
+      // Only strings and regular expressions are allowed.
+      //
       if (typeof (uri) !== 'string') throw new TypeError('url must be a String');
 
       this._url = url.parse(uri).pathname;
@@ -49,7 +67,7 @@ Object.defineProperty(Route.prototype, 'url', {
       this.flags = 'x';
       this.params = [];
 
-      this._url.split('/').forEach(function (fragment) {
+      this._url.split('/').forEach(function forEach(fragment) {
         if (!fragment.length) return;
 
         self.pattern += '\\/+';
@@ -101,7 +119,7 @@ Route.prototype.exec = function exec(uri) {
   var re = xRegExp(this.pattern, this.flags)
     , result = re.exec(uri.pathname);
 
-  if (!result) return false;
+  if (!result) return {};
 
   var params = {}
     , i = 0;

@@ -43,7 +43,11 @@ describe('Route', function () {
       expect(r.url).to.equal('/foo');
     });
 
-    it('should accept regexps as urls');
+    it('should accept regexps as urls', function () {
+      var r = new Route(/\/foo\/bar/);
+
+      expect(r.url).to.be.a('string');
+    });
 
     it('should transform re/adfasdfa/adfasf/gm to a XRegExp');
 
@@ -51,7 +55,17 @@ describe('Route', function () {
   });
 
   describe('#test', function () {
-    it('should test against urls for matches');
+    it('should test against urls for matches', function () {
+      var r = new Route('/foo');
+
+      expect(r.test('/foo')).to.equal(true);
+      expect(r.test('/foo/bar')).to.equal(false);
+
+      r = new Route(/\/foo\/bar/);
+
+      expect(r.test('/foo')).to.equal(false);
+      expect(r.test('/foo/bar')).to.equal(true);
+    });
 
     it('should accept optional parameters');
   });
