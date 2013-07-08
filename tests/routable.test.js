@@ -1,12 +1,12 @@
-'use strict';
-
-// set up chai, our assertation library
-var chai = require('chai')
-  , expect = chai.expect;
-
-chai.Assertion.includeStack = true;
-
 describe('Route', function () {
+  'use strict';
+
+  // set up chai, our assertation library
+  var chai = require('chai')
+    , expect = chai.expect;
+
+  chai.Assertion.includeStack = true;
+
   var Route = require('../');
 
   it('should be exported as function', function () {
@@ -49,7 +49,12 @@ describe('Route', function () {
       expect(r.url).to.be.a('string');
     });
 
-    it('should transform re/adfasdfa/adfasf/gm to a XRegExp');
+    it('should transform "/^adfasdfa/adfasf/gm" to a XRegExp', function () {
+       var r = new Route('/^\\/adfasdfa\\/adfasf/gm');
+
+       expect(r.url).to.be.a('string');
+       expect(r.test('/adfasdfa/adfasf')).to.equal(true);
+    });
 
     it('should accept named parameters');
   });

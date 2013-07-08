@@ -1,13 +1,15 @@
 'use strict';
 
-var url = require('url')
-  , xRegExp = require('xregexp').XRegExp;
+var xRegExp = require('xregexp').XRegExp
+  , url = require('url');
 
 /**
- * HTTP Route
+ * Route is a simple representation of a HTTP route. It can be used to simply
+ * check if a given URL matches a certain route.
  *
  * @constructor
- * @param {String|RegExp} url url to match against
+ * @param {String|RegExp} url Url to match against.
+ * @api private
  */
 var Route = module.exports = function Route(url) {
   if (!url) throw new Error('Missing url argument');
@@ -17,6 +19,7 @@ var Route = module.exports = function Route(url) {
   this.params = [];     // Param names from the url.
   this.parsers = {};    // Param parsers.
   this.pattern = '';    // RegExp body.
+  this._compiled = 0;   // Compiled version of xRegExp;
 
   // Set the url of the route, it will be automatically parsed.
   this.url = url;
@@ -29,6 +32,7 @@ Object.defineProperty(Route.prototype, 'url', {
      * Returns the compiled version of a url.
      *
      * @returns {String}
+     * @api private
      */
   , get: function get() {
       return this._url.toString();
@@ -38,9 +42,12 @@ Object.defineProperty(Route.prototype, 'url', {
      * Parse the url.
      *
      * @param {Mixed} uri The uri that needs to be parsed.
+     * @api private
      */
   , set: function set(uri) {
-      var self = this;
+      var xregexpre = /\/\^(.*)+\/([sxngimy]+)?$/g
+        , self = this
+        , re;
 
       //
       // We're already a regular expression, no need to parse it further.
@@ -54,13 +61,25 @@ Object.defineProperty(Route.prototype, 'url', {
         if (uri.ignoreCase) this.flags += 'i';
         if (uri.multiline) this.flags += 'm';
 
-        return;
+        return this.compile();
       }
 
       //
       // Only strings and regular expressions are allowed.
       //
       if (typeof (uri) !== 'string') throw new TypeError('url must be a String');
+
+      //
+      // When we've received a string that starts with a `/^ .. /flgs`, assume that we've
+      // been given a valid xregexp string.
+      //
+      if (re = xregexpre.exec(uri)) {
+        this._url = uri;
+        this.pattern = re[1];
+        this.flags = re[2];
+
+        return this.compile();
+      }
 
       this._url = url.parse(uri).pathname;
       this.pattern = '^';
@@ -90,20 +109,33 @@ Object.defineProperty(Route.prototype, 'url', {
         if (optional) self.pattern += '\\?';
       });
 
-      if (self.pattern === '^') self.pattern += '\\/';
-      self.pattern += '$';
+      if (this.pattern === '^') this.pattern += '\\/';
+      this.pattern += '$';
+
+      return this.compile();
     }
 });
 
 /**
+ * Compile our dis-assembled source to a new xRegExp instance.
+ *
+ * @api private
+ */
+Route.prototype.compile = function compile() {
+  this.compiled = xRegExp(this.pattern, this.flags);
+
+  return this;
+};
+
+/**
  * Check if url matches the route.
  *
- * @param {String} uri
+ * @param {String} uri The uri we want to test against this route.
  * @returns {Boolean}
+ * @api public
  */
-Route.prototype.test = function test(uri) {
-  if (typeof uri === 'string') uri = url.parse(uri);
-  return xRegExp(this.pattern, this.flags).test(uri.pathname);
+Route.prototype.test = function test(uri, pathname) {
+  return this.compiled.test(uri);
 };
 
 /**
@@ -112,12 +144,11 @@ Route.prototype.test = function test(uri) {
  * @param {Object} req an http request object.
  * @return {Object} parameters of the configured route -> url.
  * @throws {TypeError} on input error.
+ * @api public
  */
 Route.prototype.exec = function exec(uri) {
-  if (typeof uri === 'string') uri = url.parse(uri);
-
   var re = xRegExp(this.pattern, this.flags)
-    , result = re.exec(uri.pathname);
+    , result = re.exec(uri);
 
   if (!result) return {};
 
@@ -146,8 +177,10 @@ Route.prototype.exec = function exec(uri) {
 
 /**
  * @TODO finish this method and param parsing.
+ *
  * @param {String} name name of the param
  * @param {Function} fn parser of the param
+ * @api public
  */
 Route.prototype.param = function param(name, fn) {
   (this.parsers[name] = this.parsers[name] || []).push(fn);
@@ -157,6 +190,7 @@ Route.prototype.param = function param(name, fn) {
  * String representation.
  *
  * @return {String} in the form indicated above.
+ * @api private
  */
 Route.prototype.toString = function toString() {
   var str = this.url.toString()
