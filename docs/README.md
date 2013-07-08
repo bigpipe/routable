@@ -2,12 +2,12 @@
 
 
 ### routable.Route(url _String|RegExp_)
-<p>@constructor</p>
+<p>Route is a simple representation of a HTTP route. It can be used to simply<br />check if a given URL matches a certain route.</p>
 
 
 #### Arguments
 
-- **url** _String, RegExp_ url to match against
+- **url** _String, RegExp_ Url to match against.
 
 
 
@@ -21,6 +21,7 @@ var Route = module.exports = function Route(url) {
   this.params = [];     // Param names from the url.
   this.parsers = {};    // Param parsers.
   this.pattern = '';    // RegExp body.
+  this._compiled = 0;   // Compiled version of xRegExp;
 
   // Set the url of the route, it will be automatically parsed.
   this.url = url;
@@ -28,13 +29,42 @@ var Route = module.exports = function Route(url) {
 
 Object.defineProperty(Route.prototype, 'url', {
     enumerable: false
-  , get: function get() {
+```
+---------------------------------------
+
+### routable.
+<p>Returns the compiled version of a url.</p>
+
+
+
+#### Implementation
+```js
+, get: function get() {
       return this._url.toString();
     }
+```
+---------------------------------------
 
-  , set: function set(uri) {
-      var self = this;
+### routable.(uri _Mixed_)
+<p>Parse the url.</p>
 
+
+#### Arguments
+
+- **uri** _Mixed_ The uri that needs to be parsed.
+
+
+
+#### Implementation
+```js
+, set: function set(uri) {
+      var xregexpre = /\/\^(.*)+\/([sxngimy]+)?$/g
+        , self = this
+        , re;
+
+      //
+      // We're already a regular expression, no need to parse it further.
+      //
       if (uri instanceof RegExp) {
         this._url = uri;
         this.pattern = uri.source;
@@ -44,17 +74,32 @@ Object.defineProperty(Route.prototype, 'url', {
         if (uri.ignoreCase) this.flags += 'i';
         if (uri.multiline) this.flags += 'm';
 
-        return;
+        return this.compile();
       }
 
+      //
+      // Only strings and regular expressions are allowed.
+      //
       if (typeof (uri) !== 'string') throw new TypeError('url must be a String');
+
+      //
+      // When we've received a string that starts with a `/^ .. /flgs`, assume that we've
+      // been given a valid xregexp string.
+      //
+      if (re = xregexpre.exec(uri)) {
+        this._url = uri;
+        this.pattern = re[1];
+        this.flags = re[2];
+
+        return this.compile();
+      }
 
       this._url = url.parse(uri).pathname;
       this.pattern = '^';
       this.flags = 'x';
       this.params = [];
 
-      this._url.split('/').forEach(function (fragment) {
+      this._url.split('/').forEach(function forEach(fragment) {
         if (!fragment.length) return;
 
         self.pattern += '\\/+';
@@ -77,10 +122,27 @@ Object.defineProperty(Route.prototype, 'url', {
         if (optional) self.pattern += '\\?';
       });
 
-      if (self.pattern === '^') self.pattern += '\\/';
-      self.pattern += '$';
+      if (this.pattern === '^') this.pattern += '\\/';
+      this.pattern += '$';
+
+      return this.compile();
     }
 });
+```
+---------------------------------------
+
+### routable.compile
+<p>Compile our dis-assembled source to a new xRegExp instance.</p>
+
+
+
+#### Implementation
+```js
+Route.prototype.compile = function compile() {
+  this.compiled = xRegExp(this.pattern, this.flags);
+
+  return this;
+};
 ```
 ---------------------------------------
 
@@ -90,15 +152,14 @@ Object.defineProperty(Route.prototype, 'url', {
 
 #### Arguments
 
-- **uri** _String_ 
+- **uri** _String_ The uri we want to test against this route.
 
 
 
 #### Implementation
 ```js
-Route.prototype.test = function test(uri) {
-  if (typeof uri === 'string') uri = url.parse(uri);
-  return xRegExp(this.pattern, this.flags).test(uri.pathname);
+Route.prototype.test = function test(uri, pathname) {
+  return this.compiled.test(uri);
 };
 ```
 ---------------------------------------
@@ -116,12 +177,10 @@ Route.prototype.test = function test(uri) {
 #### Implementation
 ```js
 Route.prototype.exec = function exec(uri) {
-  if (typeof uri === 'string') uri = url.parse(uri);
-
   var re = xRegExp(this.pattern, this.flags)
-    , result = re.exec(uri.pathname);
+    , result = re.exec(uri);
 
-  if (!result) return false;
+  if (!result) return {};
 
   var params = {}
     , i = 0;

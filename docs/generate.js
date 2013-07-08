@@ -26,6 +26,8 @@ var data = require('./api.json').map(function parse(jsdoc) {
   // what kind of comment is this? functional or static
   jsdoc.type = jsdoc.params.length ? 'function' : 'static';
 
+  if (!jsdoc.ctx) jsdoc.ctx = {};
+
   // generate a function invocation scheme
   if (jsdoc.type === 'function') {
     jsdoc.ctx.invocation = [
