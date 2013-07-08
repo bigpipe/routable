@@ -14,7 +14,7 @@ Installation is done through `npm`:
 npm instal --save routable
 ```
 
-### API
+### Getting Started
 
 Include module in your application:
 
@@ -27,6 +27,10 @@ Create a new `Route` instance with an URL we need to match against:
 ```js
 var route = new Route('/foo');
 ```
+
+To learn more about the API, please visit the API documentation:
+
+- https://github.com/3rd-Eden/routable/blob/master/docs/README.md
 
 ## License
 
