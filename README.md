@@ -2,35 +2,70 @@
 
 [![Build Status](https://travis-ci.org/3rd-Eden/routable.png)](https://travis-ci.org/3rd-Eden/routable)
 
-Routable is a lightweight route parser for Node.js. It's primary focus is to
-parse routes, and that's it. It's modeled against the RegExp instance so it's
-usage feels really natural to developers.
+Routable is a lightweight regular expression inspired HTTP route parser for
+Node.js. It only has one goal and that is to match and parse URL's for
+frameworks.
 
 ### Installation
 
-Installation is done through `npm`:
+The module is released in the `npm` registry as `routable`:
 
 ```
-npm instal --save routable
+npm install --save routable
 ```
 
-### Getting Started
+The `--save` automatically adds the routable module to your package.json.
 
-Include module in your application:
+### Getting started
+
+All the examples in this getting started assume that you have included the
+module in your code and exposed it as a `Routable` variable:
 
 ```js
-var Route = require('routable');
+'use strict';
+
+var Routable = require('routable');
 ```
 
-Create a new `Route` instance with an URL we need to match against:
+To create a new route simply construct a new `Routable` instance with an URL
+pattern:
 
 ```js
-var route = new Route('/foo');
+var foo = new Routable('/foo');
 ```
 
-To learn more about the API, please visit the API documentation:
+There are different patterns that can be used for testing against URL's.
+Routable supports testing against strings, Regular Expressions and even xRegExp
+based expressions. See [patterns](#patterns) for more details.
 
-- https://github.com/3rd-Eden/routable/blob/master/docs/README.md
+Now that you've created your first `Routable` instance you can use it to test
+against URL's. To see if a URL matches the your `Routable` instance you can use
+the `Routable#test` method:
+
+#### Routable.test(url)
+
+Just like the `RegularExpression.test` method, it returns a boolean indicating
+if the given string matches the expression or not. The same is true for
+`Routable` but instead of testing a Regular Express you're testing your pattern.
+
+```js
+var foo = new Routable('/foo');
+
+foo.test('/bar');   // false;
+foo.test('/foo');   // true;
+foo.test('/fooo');  // false;
+```
+
+While quickly testing an URL is useful sometimes you also want to parse out the
+information from the URL. If you have a capturing or named Regular Expression or
+string you can use the `routable#exec`
+
+### Patterns
+
+- Regular Expressions `/\/foo/`.
+- Capturing Regular Expressions `/\/(foo|bar)\/bar/`.
+- Capturing strings `/foo/:bar/1/:baz`.
+- Plain strings `/foo/bar`
 
 ## License
 
