@@ -60,6 +60,21 @@ While quickly testing an URL is useful sometimes you also want to parse out the
 information from the URL. If you have a capturing or named Regular Expression or
 string you can use the `routable#exec`
 
+#### Routable.exec(url)
+
+With normal `RegularExpression.exec` you can either `undefined` or an `Array`
+with results as return value. With a `Routable` instance you still get
+`undefined` when there isn't a match but instead of an array you receive an
+`Object`.
+
+```js
+var foobar = new Routable('/foo/:bar');
+
+var res = foobar.exec('/foo/foo');
+
+console.log(res.bar); // 'foo'
+```
+
 ### Patterns
 
 - Regular Expressions `/\/foo/`.

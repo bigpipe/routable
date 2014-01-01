@@ -71,8 +71,8 @@ Object.defineProperty(Route.prototype, 'url', {
       if (typeof (uri) !== 'string') throw new TypeError('url must be a String');
 
       //
-      // When we've received a string that starts with a `/^ .. /flags`, assume that we've
-      // been given a valid xRegExp string.
+      // When we've received a string that starts with a `/^ .. /flags`, assume
+      // that we've been given a valid xRegExp string.
       //
       if (re = xregexpre.exec(uri)) {
         this._url = uri;
@@ -137,7 +137,7 @@ Route.prototype.compile = function compile() {
  * @returns {Boolean}
  * @api public
  */
-Route.prototype.test = function test(uri, pathname) {
+Route.prototype.test = function test(uri) {
   return this.compiled.test(uri);
 };
 
@@ -151,12 +151,11 @@ Route.prototype.test = function test(uri, pathname) {
  */
 Route.prototype.exec = function exec(uri) {
   var re = xRegExp(this.pattern, this.flags)
-    , result = re.exec(uri);
-
-  if (!result) return {};
-
-  var params = {}
+    , params = Object.create(null)
+    , result = re.exec(uri)
     , i = 0;
+
+  if (!result) return undefined;
 
   //
   // Extract the parameters from the URL.
