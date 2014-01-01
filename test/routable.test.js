@@ -74,4 +74,22 @@ describe('Route', function () {
 
     it('should accept optional parameters');
   });
+
+  describe('#param', function () {
+    it('should transform a given param', function () {
+      var r = new Route('/foo/:bar');
+
+      r.param('bar', function (value, uri, param) {
+        expect(value).to.equal('banana');
+        expect(uri).to.equal('/foo/banana');
+        expect(param).to.equal('bar');
+
+        return 'foo';
+      });
+
+      var value = r.exec('/foo/banana');
+
+      expect(value.bar).to.equal('foo');
+    });
+  });
 });

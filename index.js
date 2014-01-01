@@ -182,7 +182,7 @@ Route.prototype.exec = function exec(uri) {
   //
   for (var param in params) {
     if (param in this.parsers) {
-      params[param] = this.parsers[param](params[param], param, uri);
+      params[param] = this.parsers[param](params[param], uri, param);
     }
   }
 
@@ -190,14 +190,16 @@ Route.prototype.exec = function exec(uri) {
 };
 
 /**
- * @TODO finish this method and param parsing.
+ * Add a custom param parser for when we execute the route on a given URL.
  *
  * @param {String} name name of the param
  * @param {Function} fn parser of the param
  * @api public
  */
 Route.prototype.param = function param(name, fn) {
-  (this.parsers[name] = this.parsers[name] || []).push(fn);
+  this.parsers[name] = fn;
+
+  return this;
 };
 
 /**
