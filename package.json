@@ -4,9 +4,12 @@
   "description": "Route matching and testing, nothing more than that. As simple as it could be.",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "NODE_ENV=testing ./node_modules/.bin/mocha $(find test -name '*.test.js')"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/3rd-Eden/routable.git"
+  },
   "keywords": [
     "route",
     "router",

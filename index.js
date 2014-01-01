@@ -12,6 +12,7 @@ var xRegExp = require('xregexp').XRegExp
  * @api private
  */
 var Route = module.exports = function Route(url) {
+  if (!(this instanceof Route)) return new Route(url);
   if (!url) throw new Error('Missing url argument');
 
   this.flags = '';      // RegExp flags.
@@ -157,7 +158,9 @@ Route.prototype.exec = function exec(uri) {
   var params = {}
     , i = 0;
 
+  //
   // Extract the parameters from the URL.
+  //
   if (this.params && this.params.length) {
     this.params.forEach(function parseParams(p) {
       if (++i < result.length) params[p] = decodeURIComponent(result[i]);
@@ -172,6 +175,15 @@ Route.prototype.exec = function exec(uri) {
     re.xregexp.captureNames.forEach(function each(key) {
       params[key] = result[key];
     });
+  }
+
+  //
+  // Iterate over the parsers so they can transform the results if needed.
+  //
+  for (var param in params) {
+    if (param in this.parsers) {
+      params[param] = this.parsers[param](params[param], param, uri);
+    }
   }
 
   return params;
