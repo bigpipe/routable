@@ -8,20 +8,20 @@ var xRegExp = require('xregexp').XRegExp
  * check if a given URL matches a certain route.
  *
  * @constructor
- * @param {String|RegExp} url Url to match against.
+ * @param {String|RegExp} url URL to match against.
  * @api private
  */
 var Route = module.exports = function Route(url) {
   if (!url) throw new Error('Missing url argument');
 
   this.flags = '';      // RegExp flags.
-  this._url = '';       // Backup of the real url.
-  this.params = [];     // Param names from the url.
+  this._url = '';       // Backup of the real URL.
+  this.params = [];     // Param names from the URL
   this.parsers = {};    // Param parsers.
   this.pattern = '';    // RegExp body.
-  this._compiled = 0;   // Compiled version of xRegExp;
+  this._compiled = 0;   // Compiled version of xRegExp.
 
-  // Set the url of the route, it will be automatically parsed.
+  // Set the URL of the route, it will be automatically parsed.
   this.url = url;
 };
 
@@ -29,7 +29,7 @@ Object.defineProperty(Route.prototype, 'url', {
     enumerable: false
 
     /**
-     * Returns the compiled version of a url.
+     * Returns the compiled version of a URL.
      *
      * @returns {String}
      * @api private
@@ -39,9 +39,9 @@ Object.defineProperty(Route.prototype, 'url', {
     }
 
     /**
-     * Parse the url.
+     * Parse the URL.
      *
-     * @param {Mixed} uri The uri that needs to be parsed.
+     * @param {Mixed} uri The URI that needs to be parsed.
      * @api private
      */
   , set: function set(uri) {
@@ -70,8 +70,8 @@ Object.defineProperty(Route.prototype, 'url', {
       if (typeof (uri) !== 'string') throw new TypeError('url must be a String');
 
       //
-      // When we've received a string that starts with a `/^ .. /flgs`, assume that we've
-      // been given a valid xregexp string.
+      // When we've received a string that starts with a `/^ .. /flags`, assume that we've
+      // been given a valid xRegExp string.
       //
       if (re = xregexpre.exec(uri)) {
         this._url = uri;
@@ -95,11 +95,13 @@ Object.defineProperty(Route.prototype, 'url', {
           , optional = fragment.charAt(fragment.length - 1) === '?';
 
         if (named) {
+          //
           // Previously was gratuitous, but better to just be standard
           // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\$\\*\\.]+)';
           //
           // See RFC3986, or this handy table:
           // http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters
+          //
           self.pattern += '([a-zA-Z0-9-_~\\.%]+)';
           self.params.push(fragment.slice(1, optional ? -1 : undefined));
         } else {
@@ -128,9 +130,9 @@ Route.prototype.compile = function compile() {
 };
 
 /**
- * Check if url matches the route.
+ * Check if URL matches the route.
  *
- * @param {String} uri The uri we want to test against this route.
+ * @param {String} uri The URI we want to test against this route.
  * @returns {Boolean}
  * @api public
  */
@@ -139,10 +141,10 @@ Route.prototype.test = function test(uri, pathname) {
 };
 
 /**
- * Whether or not the route matches the given request's url.
+ * Whether or not the route matches the given request's URL.
  *
  * @param {Object} req an http request object.
- * @return {Object} parameters of the configured route -> url.
+ * @return {Object} parameters of the configured route -> URL.
  * @throws {TypeError} on input error.
  * @api public
  */
@@ -155,7 +157,7 @@ Route.prototype.exec = function exec(uri) {
   var params = {}
     , i = 0;
 
-  // Extract the parameters from the url.
+  // Extract the parameters from the URL.
   if (this.params && this.params.length) {
     this.params.forEach(function parseParams(p) {
       if (++i < result.length) params[p] = decodeURIComponent(result[i]);
