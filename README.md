@@ -1,6 +1,6 @@
 # Routable
 
-[![Build Status](https://travis-ci.org/3rd-Eden/routable.png)](https://travis-ci.org/3rd-Eden/routable)
+[![Build Status](https://travis-ci.org/bigpipe/routable.png)](https://travis-ci.org/bigpipe/routable)
 
 Routable is a lightweight regular expression inspired HTTP route parser for
 Node.js. It only has one goal and that is to match and parse URL's for
