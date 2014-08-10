@@ -56,7 +56,16 @@ describe('Route', function () {
        expect(r.test('/adfasdfa/adfasf')).to.equal(true);
     });
 
-    it('should accept named parameters');
+    it('should accept named parameters', function () {
+      var r = new Route('/foo/:bar');
+      var value = r.exec('/foo/banana');
+      expect(value.bar).to.equal('banana');
+
+      var r = new Route('/foo/:bar/foz/:baz');
+      var value = r.exec('/foo/banana/foz/potato');
+      expect(value.bar).to.equal('banana');
+      expect(value.baz).to.equal('potato');
+    });
   });
 
   describe('#test', function () {
@@ -72,7 +81,20 @@ describe('Route', function () {
       expect(r.test('/foo/bar')).to.equal(true);
     });
 
-    it('should accept optional parameters');
+    it('should accept optional parameters', function () {
+      var r = new Route('/foo/:bar?');
+
+      var value = r.exec('/foo/apple');
+
+      expect(r.test('/foo/apple')).to.equal(true);
+      expect(r.exec('/foo/apple').bar).to.equal('apple');
+
+      expect(r.test('/foo')).to.equal(true);
+      expect(r.exec('/foo').bar).to.equal(null);
+
+      expect(r.test('/foo/')).to.equal(true);
+      expect(r.exec('/foo/').bar).to.equal(null);
+    });
   });
 
   describe('#param', function () {

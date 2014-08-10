@@ -82,18 +82,19 @@ Object.defineProperty(Route.prototype, 'url', {
         return this.compile();
       }
 
-      this._url = url.parse(uri).pathname;
+      this._url = url.parse(uri).path;
       this.pattern = '^';
       this.flags = 'x';
       this.params = [];
 
       this._url.split('/').forEach(function forEach(fragment) {
-        if (!fragment.length) return;
 
-        self.pattern += '\\/+';
+        if (!fragment.length) return;
 
         var named = fragment.charAt(0) === ':'
           , optional = fragment.charAt(fragment.length - 1) === '?';
+
+        self.pattern += optional ? '\\/*' : '\\/+';
 
         if (named) {
           //
@@ -109,7 +110,7 @@ Object.defineProperty(Route.prototype, 'url', {
           self.pattern += fragment;
         }
 
-        if (optional) self.pattern += '\\?';
+        if (optional) self.pattern += '?';
       });
 
       if (this.pattern === '^') this.pattern += '\\/';
@@ -162,7 +163,7 @@ Route.prototype.exec = function exec(uri) {
   //
   if (this.params && this.params.length) {
     this.params.forEach(function parseParams(p) {
-      if (++i < result.length) params[p] = decodeURIComponent(result[i]);
+      if (++i < result.length) params[p] = result[i] ? decodeURIComponent(result[i]) : null;
     });
   } else if (this._url instanceof RegExp) {
     for (i = 0; i < result.length; i++) {

@@ -80,6 +80,7 @@ console.log(res.bar); // 'foo'
 - Regular Expressions `/\/foo/`.
 - Capturing Regular Expressions `/\/(foo|bar)\/bar/`.
 - Capturing strings `/foo/:bar/1/:baz`.
+- Optional parameters `/foo/:bar?`.
 - Plain strings `/foo/bar`
 
 ## License
