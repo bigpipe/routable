@@ -12,7 +12,7 @@
           "RegExp"
         ],
         "name": "url",
-        "description": "Url to match against."
+        "description": "URL to match against."
       },
       {
         "type": "api",
@@ -26,7 +26,7 @@
     },
     "isPrivate": true,
     "ignore": false,
-    "code": "var Route = module.exports = function Route(url) {\n  if (!url) throw new Error('Missing url argument');\n\n  this.flags = '';      // RegExp flags.\n  this._url = '';       // Backup of the real url.\n  this.params = [];     // Param names from the url.\n  this.parsers = {};    // Param parsers.\n  this.pattern = '';    // RegExp body.\n  this._compiled = 0;   // Compiled version of xRegExp;\n\n  // Set the url of the route, it will be automatically parsed.\n  this.url = url;\n};\n\nObject.defineProperty(Route.prototype, 'url', {\n    enumerable: false",
+    "code": "var Route = module.exports = function Route(url) {\n  if (!(this instanceof Route)) return new Route(url);\n  if (!url) throw new Error('Missing url argument');\n\n  this.flags = '';      // RegExp flags.\n  this._url = '';       // Backup of the real URL.\n  this.params = [];     // Param names from the URL\n  this.parsers = {};    // Param parsers.\n  this.pattern = '';    // RegExp body.\n  this._compiled = 0;   // Compiled version of xRegExp.\n\n  // Set the URL of the route, it will be automatically parsed.\n  this.url = url;\n};\n\nObject.defineProperty(Route.prototype, 'url', {\n    enumerable: false",
     "ctx": {
       "type": "declaration",
       "name": "Route",
@@ -46,8 +46,8 @@
       }
     ],
     "description": {
-      "full": "<p>Returns the compiled version of a url.</p>",
-      "summary": "<p>Returns the compiled version of a url.</p>",
+      "full": "<p>Returns the compiled version of a URL.</p>",
+      "summary": "<p>Returns the compiled version of a URL.</p>",
       "body": ""
     },
     "isPrivate": true,
@@ -62,7 +62,7 @@
           "Mixed"
         ],
         "name": "uri",
-        "description": "The uri that needs to be parsed."
+        "description": "The URI that needs to be parsed."
       },
       {
         "type": "api",
@@ -70,13 +70,13 @@
       }
     ],
     "description": {
-      "full": "<p>Parse the url.</p>",
-      "summary": "<p>Parse the url.</p>",
+      "full": "<p>Parse the URL.</p>",
+      "summary": "<p>Parse the URL.</p>",
       "body": ""
     },
     "isPrivate": true,
     "ignore": false,
-    "code": ", set: function set(uri) {\n      var xregexpre = /\\/\\^(.*)+\\/([sxngimy]+)?$/g\n        , self = this\n        , re;\n\n      //\n      // We're already a regular expression, no need to parse it further.\n      //\n      if (uri instanceof RegExp) {\n        this._url = uri;\n        this.pattern = uri.source;\n        this.flags = '';\n\n        if (uri.global) this.flags += 'g';\n        if (uri.ignoreCase) this.flags += 'i';\n        if (uri.multiline) this.flags += 'm';\n\n        return this.compile();\n      }\n\n      //\n      // Only strings and regular expressions are allowed.\n      //\n      if (typeof (uri) !== 'string') throw new TypeError('url must be a String');\n\n      //\n      // When we've received a string that starts with a `/^ .. /flgs`, assume that we've\n      // been given a valid xregexp string.\n      //\n      if (re = xregexpre.exec(uri)) {\n        this._url = uri;\n        this.pattern = re[1];\n        this.flags = re[2];\n\n        return this.compile();\n      }\n\n      this._url = url.parse(uri).pathname;\n      this.pattern = '^';\n      this.flags = 'x';\n      this.params = [];\n\n      this._url.split('/').forEach(function forEach(fragment) {\n        if (!fragment.length) return;\n\n        self.pattern += '\\\\/+';\n\n        var named = fragment.charAt(0) === ':'\n          , optional = fragment.charAt(fragment.length - 1) === '?';\n\n        if (named) {\n          // Previously was gratuitous, but better to just be standard\n          // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\\\$\\\\*\\\\.]+)';\n          //\n          // See RFC3986, or this handy table:\n          // http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters\n          self.pattern += '([a-zA-Z0-9-_~\\\\.%]+)';\n          self.params.push(fragment.slice(1, optional ? -1 : undefined));\n        } else {\n          self.pattern += fragment;\n        }\n\n        if (optional) self.pattern += '\\\\?';\n      });\n\n      if (this.pattern === '^') this.pattern += '\\\\/';\n      this.pattern += '$';\n\n      return this.compile();\n    }\n});"
+    "code": ", set: function set(uri) {\n      var xregexpre = /\\/\\^(.*)+\\/([sxngimy]+)?$/g\n        , self = this\n        , re;\n\n      //\n      // We're already a regular expression, no need to parse it further.\n      //\n      if (uri instanceof RegExp) {\n        this._url = uri;\n        this.pattern = uri.source;\n        this.flags = '';\n\n        if (uri.global) this.flags += 'g';\n        if (uri.ignoreCase) this.flags += 'i';\n        if (uri.multiline) this.flags += 'm';\n\n        return this.compile();\n      }\n\n      //\n      // Only strings and regular expressions are allowed.\n      //\n      if (typeof (uri) !== 'string') throw new TypeError('url must be a String');\n\n      //\n      // When we've received a string that starts with a `/^ .. /flags`, assume\n      // that we've been given a valid xRegExp string.\n      //\n      if (re = xregexpre.exec(uri)) {\n        this._url = uri;\n        this.pattern = re[1];\n        this.flags = re[2];\n\n        return this.compile();\n      }\n\n      this._url = url.parse(uri).path;\n      this.pattern = '^';\n      this.flags = 'x';\n      this.params = [];\n\n      this._url.split('/').forEach(function forEach(fragment) {\n\n        if (!fragment.length) return;\n\n        var named = fragment.charAt(0) === ':'\n          , optional = fragment.charAt(fragment.length - 1) === '?';\n\n        self.pattern += optional ? '\\\\"
   },
   {
     "tags": [
@@ -86,9 +86,9 @@
       }
     ],
     "description": {
-      "full": "<p>Compile our dis-assembled source to a new xRegExp instance.</p>",
-      "summary": "<p>Compile our dis-assembled source to a new xRegExp instance.</p>",
-      "body": ""
+      "full": "<p>: '\\/+';</p>\n\n<pre><code>    if (named) {\n      //\n      // Previously was gratuitous, but better to just be standard\n      // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\\\$\\\\*\\\\.]+)';\n      //\n      // See RFC3986, or this handy table:\n      // <a href='http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters'>http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters</a>\n      //\n      self.pattern += '([a-zA-Z0-9-_~\\\\.%]+)';\n      self.params.push(fragment.slice(1, optional ? -1 : undefined));\n    } else {\n      self.pattern += fragment;\n    }\n\n    if (optional) self.pattern += '?';\n  });\n\n  if (this.pattern === '^') this.pattern += '\\\\/';\n  this.pattern += '$';\n\n  return this.compile();\n}\n</code></pre>\n\n<p>});</p>\n\n<p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>",
+      "summary": "<p>: '\\/+';</p>",
+      "body": "<pre><code>    if (named) {\n      //\n      // Previously was gratuitous, but better to just be standard\n      // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\\\$\\\\*\\\\.]+)';\n      //\n      // See RFC3986, or this handy table:\n      // <a href='http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters'>http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters</a>\n      //\n      self.pattern += '([a-zA-Z0-9-_~\\\\.%]+)';\n      self.params.push(fragment.slice(1, optional ? -1 : undefined));\n    } else {\n      self.pattern += fragment;\n    }\n\n    if (optional) self.pattern += '?';\n  });\n\n  if (this.pattern === '^') this.pattern += '\\\\/';\n  this.pattern += '$';\n\n  return this.compile();\n}\n</code></pre>\n\n<p>});</p>\n\n<p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>"
     },
     "isPrivate": true,
     "ignore": false,
@@ -109,7 +109,7 @@
           "String"
         ],
         "name": "uri",
-        "description": "The uri we want to test against this route."
+        "description": "The URI we want to test against this route."
       },
       {
         "type": "returns",
@@ -121,13 +121,13 @@
       }
     ],
     "description": {
-      "full": "<p>Check if url matches the route.</p>",
-      "summary": "<p>Check if url matches the route.</p>",
+      "full": "<p>Check if URL matches the route.</p>",
+      "summary": "<p>Check if URL matches the route.</p>",
       "body": ""
     },
     "isPrivate": false,
     "ignore": false,
-    "code": "Route.prototype.test = function test(uri, pathname) {\n  return this.compiled.test(uri);\n};",
+    "code": "Route.prototype.test = function test(uri) {\n  return this.compiled.test(uri);\n};",
     "ctx": {
       "type": "method",
       "constructor": "Route",
@@ -151,11 +151,14 @@
         "types": [
           "Object"
         ],
-        "description": "parameters of the configured route -> url."
+        "description": "parameters of the configured route -> URL."
       },
       {
         "type": "throws",
-        "string": "{TypeError} on input error."
+        "types": [
+          "TypeError"
+        ],
+        "description": "on input error."
       },
       {
         "type": "api",
@@ -163,13 +166,13 @@
       }
     ],
     "description": {
-      "full": "<p>Whether or not the route matches the given request's url.</p>",
-      "summary": "<p>Whether or not the route matches the given request's url.</p>",
+      "full": "<p>Whether or not the route matches the given request's URL.</p>",
+      "summary": "<p>Whether or not the route matches the given request's URL.</p>",
       "body": ""
     },
     "isPrivate": false,
     "ignore": false,
-    "code": "Route.prototype.exec = function exec(uri) {\n  var re = xRegExp(this.pattern, this.flags)\n    , result = re.exec(uri);\n\n  if (!result) return {};\n\n  var params = {}\n    , i = 0;\n\n  // Extract the parameters from the url.\n  if (this.params && this.params.length) {\n    this.params.forEach(function parseParams(p) {\n      if (++i < result.length) params[p] = decodeURIComponent(result[i]);\n    });\n  } else if (this._url instanceof RegExp) {\n    for (i = 0; i < result.length; i++) {\n      if (i === 0) continue;\n\n      params[(i - 1)] = result[i];\n    }\n  } else if (re.xregexp && re.xregexp.captureNames) {\n    re.xregexp.captureNames.forEach(function each(key) {\n      params[key] = result[key];\n    });\n  }\n\n  return params;\n};",
+    "code": "Route.prototype.exec = function exec(uri) {\n  var re = xRegExp(this.pattern, this.flags)\n    , params = Object.create(null)\n    , result = re.exec(uri)\n    , i = 0;\n\n  if (!result) return undefined;\n\n  //\n  // Extract the parameters from the URL.\n  //\n  if (this.params && this.params.length) {\n    this.params.forEach(function parseParams(p) {\n      if (++i < result.length) params[p] = result[i] ? decodeURIComponent(result[i]) : null;\n    });\n  } else if (this._url instanceof RegExp) {\n    for (i = 0; i < result.length; i++) {\n      if (i === 0) continue;\n\n      params[(i - 1)] = result[i];\n    }\n  } else if (re.xregexp && re.xregexp.captureNames) {\n    re.xregexp.captureNames.forEach(function each(key) {\n      params[key] = result[key];\n    });\n  }\n\n  //\n  // Iterate over the parsers so they can transform the results if needed.\n  //\n  for (var param in params) {\n    if (param in this.parsers) {\n      params[param] = this.parsers[param](params[param], uri, param);\n    }\n  }\n\n  return params;\n};",
     "ctx": {
       "type": "method",
       "constructor": "Route",
@@ -202,13 +205,13 @@
       }
     ],
     "description": {
-      "full": "<p>@TODO finish this method and param parsing.</p>",
-      "summary": "<p>@TODO finish this method and param parsing.</p>",
+      "full": "<p>Add a custom param parser for when we execute the route on a given URL.</p>",
+      "summary": "<p>Add a custom param parser for when we execute the route on a given URL.</p>",
       "body": ""
     },
     "isPrivate": false,
     "ignore": false,
-    "code": "Route.prototype.param = function param(name, fn) {\n  (this.parsers[name] = this.parsers[name] || []).push(fn);\n};",
+    "code": "Route.prototype.param = function param(name, fn) {\n  this.parsers[name] = fn;\n\n  return this;\n};",
     "ctx": {
       "type": "method",
       "constructor": "Route",

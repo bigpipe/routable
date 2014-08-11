@@ -7,23 +7,24 @@
 
 #### Arguments
 
-- **url** _String, RegExp_ Url to match against.
+- **url** _String, RegExp_ URL to match against.
 
 
 
 #### Implementation
 ```js
 var Route = module.exports = function Route(url) {
+  if (!(this instanceof Route)) return new Route(url);
   if (!url) throw new Error('Missing url argument');
 
   this.flags = '';      // RegExp flags.
-  this._url = '';       // Backup of the real url.
-  this.params = [];     // Param names from the url.
+  this._url = '';       // Backup of the real URL.
+  this.params = [];     // Param names from the URL
   this.parsers = {};    // Param parsers.
   this.pattern = '';    // RegExp body.
-  this._compiled = 0;   // Compiled version of xRegExp;
+  this._compiled = 0;   // Compiled version of xRegExp.
 
-  // Set the url of the route, it will be automatically parsed.
+  // Set the URL of the route, it will be automatically parsed.
   this.url = url;
 };
 
@@ -33,7 +34,7 @@ Object.defineProperty(Route.prototype, 'url', {
 ---------------------------------------
 
 ### routable.
-<p>Returns the compiled version of a url.</p>
+<p>Returns the compiled version of a URL.</p>
 
 
 
@@ -46,12 +47,12 @@ Object.defineProperty(Route.prototype, 'url', {
 ---------------------------------------
 
 ### routable.(uri _Mixed_)
-<p>Parse the url.</p>
+<p>Parse the URL.</p>
 
 
 #### Arguments
 
-- **uri** _Mixed_ The uri that needs to be parsed.
+- **uri** _Mixed_ The URI that needs to be parsed.
 
 
 
@@ -83,8 +84,8 @@ Object.defineProperty(Route.prototype, 'url', {
       if (typeof (uri) !== 'string') throw new TypeError('url must be a String');
 
       //
-      // When we've received a string that starts with a `/^ .. /flgs`, assume that we've
-      // been given a valid xregexp string.
+      // When we've received a string that starts with a `/^ .. /flags`, assume
+      // that we've been given a valid xRegExp string.
       //
       if (re = xregexpre.exec(uri)) {
         this._url = uri;
@@ -94,45 +95,52 @@ Object.defineProperty(Route.prototype, 'url', {
         return this.compile();
       }
 
-      this._url = url.parse(uri).pathname;
+      this._url = url.parse(uri).path;
       this.pattern = '^';
       this.flags = 'x';
       this.params = [];
 
       this._url.split('/').forEach(function forEach(fragment) {
-        if (!fragment.length) return;
 
-        self.pattern += '\\/+';
+        if (!fragment.length) return;
 
         var named = fragment.charAt(0) === ':'
           , optional = fragment.charAt(fragment.length - 1) === '?';
 
-        if (named) {
-          // Previously was gratuitous, but better to just be standard
-          // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\$\\*\\.]+)';
-          //
-          // See RFC3986, or this handy table:
-          // http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters
-          self.pattern += '([a-zA-Z0-9-_~\\.%]+)';
-          self.params.push(fragment.slice(1, optional ? -1 : undefined));
-        } else {
-          self.pattern += fragment;
-        }
-
-        if (optional) self.pattern += '\\?';
-      });
-
-      if (this.pattern === '^') this.pattern += '\\/';
-      this.pattern += '$';
-
-      return this.compile();
-    }
-});
+        self.pattern += optional ? '\\
 ```
 ---------------------------------------
 
 ### routable.compile
-<p>Compile our dis-assembled source to a new xRegExp instance.</p>
+<p>: '\/+';</p>
+
+<pre><code>    if (named) {
+      //
+      // Previously was gratuitous, but better to just be standard
+      // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\$\\*\\.]+)';
+      //
+      // See RFC3986, or this handy table:
+      // <a href='http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters'>http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters</a>
+      //
+      self.pattern += '([a-zA-Z0-9-_~\\.%]+)';
+      self.params.push(fragment.slice(1, optional ? -1 : undefined));
+    } else {
+      self.pattern += fragment;
+    }
+
+    if (optional) self.pattern += '?';
+  });
+
+  if (this.pattern === '^') this.pattern += '\\/';
+  this.pattern += '$';
+
+  return this.compile();
+}
+</code></pre>
+
+<p>});</p>
+
+<p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>
 
 
 
@@ -147,25 +155,25 @@ Route.prototype.compile = function compile() {
 ---------------------------------------
 
 ### routable.test(uri _String_)
-<p>Check if url matches the route.</p>
+<p>Check if URL matches the route.</p>
 
 
 #### Arguments
 
-- **uri** _String_ The uri we want to test against this route.
+- **uri** _String_ The URI we want to test against this route.
 
 
 
 #### Implementation
 ```js
-Route.prototype.test = function test(uri, pathname) {
+Route.prototype.test = function test(uri) {
   return this.compiled.test(uri);
 };
 ```
 ---------------------------------------
 
 ### routable.exec(req _Object_)
-<p>Whether or not the route matches the given request's url.</p>
+<p>Whether or not the route matches the given request's URL.</p>
 
 
 #### Arguments
@@ -178,17 +186,18 @@ Route.prototype.test = function test(uri, pathname) {
 ```js
 Route.prototype.exec = function exec(uri) {
   var re = xRegExp(this.pattern, this.flags)
-    , result = re.exec(uri);
-
-  if (!result) return {};
-
-  var params = {}
+    , params = Object.create(null)
+    , result = re.exec(uri)
     , i = 0;
 
-  // Extract the parameters from the url.
+  if (!result) return undefined;
+
+  //
+  // Extract the parameters from the URL.
+  //
   if (this.params && this.params.length) {
     this.params.forEach(function parseParams(p) {
-      if (++i < result.length) params[p] = decodeURIComponent(result[i]);
+      if (++i < result.length) params[p] = result[i] ? decodeURIComponent(result[i]) : null;
     });
   } else if (this._url instanceof RegExp) {
     for (i = 0; i < result.length; i++) {
@@ -202,13 +211,22 @@ Route.prototype.exec = function exec(uri) {
     });
   }
 
+  //
+  // Iterate over the parsers so they can transform the results if needed.
+  //
+  for (var param in params) {
+    if (param in this.parsers) {
+      params[param] = this.parsers[param](params[param], uri, param);
+    }
+  }
+
   return params;
 };
 ```
 ---------------------------------------
 
 ### routable.param(name _String_, fn _Function_)
-<p>@TODO finish this method and param parsing.</p>
+<p>Add a custom param parser for when we execute the route on a given URL.</p>
 
 
 #### Arguments
@@ -222,7 +240,9 @@ Route.prototype.exec = function exec(uri) {
 #### Implementation
 ```js
 Route.prototype.param = function param(name, fn) {
-  (this.parsers[name] = this.parsers[name] || []).push(fn);
+  this.parsers[name] = fn;
+
+  return this;
 };
 ```
 ---------------------------------------
