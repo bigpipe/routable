@@ -14,6 +14,9 @@ describe('Routes', function () {
   , { route: '/foo', matches: '/foo' }
   , { route: '/foo/bar', matches: '/foo/bar' }
   , { route: '/foo/:bar', matches: '/foo/bar' }
+  , { route: '/foo/:bar?', matches: '/foo/bar' }
+  , { route: '/foo/:bar?', matches: '/foo/' }
+  , { route: '/foo/:bar?', matches: '/foo' }
   , { route: /^\/simpleregexp/, matches: '/simpleregexp' }
   , { route: /^\/foo\/(.*)/, matches: '/foo/complex' }
   , { route: '/^\\/(?<named>[\\d\\.]+)\\/foo/', matches: '/1.0.0/foo' }
