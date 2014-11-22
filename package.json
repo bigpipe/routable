@@ -20,7 +20,7 @@
   "author": "Arnout Kazemier",
   "license": "MIT",
   "dependencies": {
-    "extendable": "0.0.x",
+    "extendible": "0.1.x",
     "xregexp": "2.0.x"
   },
   "devDependencies": {

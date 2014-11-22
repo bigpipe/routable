@@ -112,35 +112,29 @@ Object.defineProperty(Route.prototype, 'url', {
 ---------------------------------------
 
 ### routable.compile
-<p>: '\/+';</p>
-
-<pre><code>    if (named) {
+<p>: &#39;\/+&#39;;</p><pre><code>    if (named) {
       //
       // Previously was gratuitous, but better to just be standard
-      // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\$\\*\\.]+)';
+      // self.pattern += &#39;([a-zA-Z0-9-_~%!;@=+\\$\\*\\.]+)&#39;;
       //
       // See RFC3986, or this handy table:
-      // <a href='http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters'>http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters</a>
+      // http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters
       //
-      self.pattern += '([a-zA-Z0-9-_~\\.%]+)';
+      self.pattern += &#39;([a-zA-Z0-9-_~\\.%]+)&#39;;
       self.params.push(fragment.slice(1, optional ? -1 : undefined));
     } else {
       self.pattern += fragment;
     }
 
-    if (optional) self.pattern += '?';
+    if (optional) self.pattern += &#39;?&#39;;
   });
 
-  if (this.pattern === '^') this.pattern += '\\/';
-  this.pattern += '$';
+  if (this.pattern === &#39;^&#39;) this.pattern += &#39;\\/&#39;;
+  this.pattern += &#39;$&#39;;
 
   return this.compile();
 }
-</code></pre>
-
-<p>});</p>
-
-<p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>
+</code></pre><p>});</p><p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>
 
 
 
@@ -173,7 +167,7 @@ Route.prototype.test = function test(uri) {
 ---------------------------------------
 
 ### routable.exec(req _Object_)
-<p>Whether or not the route matches the given request's URL.</p>
+<p>Whether or not the route matches the given request&#39;s URL.</p>
 
 
 #### Arguments
@@ -264,7 +258,7 @@ Route.prototype.toString = function toString() {
   return str;
 };
 
-Route.extend = require('extendable');
+Route.extend = require('extendible');
 ```
 ---------------------------------------
 

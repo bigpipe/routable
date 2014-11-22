@@ -218,4 +218,4 @@ Route.prototype.toString = function toString() {
   return str;
 };
 
-Route.extend = require('extendable');
+Route.extend = require('extendible');

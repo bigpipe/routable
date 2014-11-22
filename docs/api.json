@@ -86,9 +86,9 @@
       }
     ],
     "description": {
-      "full": "<p>: '\\/+';</p>\n\n<pre><code>    if (named) {\n      //\n      // Previously was gratuitous, but better to just be standard\n      // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\\\$\\\\*\\\\.]+)';\n      //\n      // See RFC3986, or this handy table:\n      // <a href='http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters'>http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters</a>\n      //\n      self.pattern += '([a-zA-Z0-9-_~\\\\.%]+)';\n      self.params.push(fragment.slice(1, optional ? -1 : undefined));\n    } else {\n      self.pattern += fragment;\n    }\n\n    if (optional) self.pattern += '?';\n  });\n\n  if (this.pattern === '^') this.pattern += '\\\\/';\n  this.pattern += '$';\n\n  return this.compile();\n}\n</code></pre>\n\n<p>});</p>\n\n<p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>",
-      "summary": "<p>: '\\/+';</p>",
-      "body": "<pre><code>    if (named) {\n      //\n      // Previously was gratuitous, but better to just be standard\n      // self.pattern += '([a-zA-Z0-9-_~%!;@=+\\\\$\\\\*\\\\.]+)';\n      //\n      // See RFC3986, or this handy table:\n      // <a href='http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters'>http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters</a>\n      //\n      self.pattern += '([a-zA-Z0-9-_~\\\\.%]+)';\n      self.params.push(fragment.slice(1, optional ? -1 : undefined));\n    } else {\n      self.pattern += fragment;\n    }\n\n    if (optional) self.pattern += '?';\n  });\n\n  if (this.pattern === '^') this.pattern += '\\\\/';\n  this.pattern += '$';\n\n  return this.compile();\n}\n</code></pre>\n\n<p>});</p>\n\n<p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>"
+      "full": "<p>: &#39;\\/+&#39;;</p><pre><code>    if (named) {\n      //\n      // Previously was gratuitous, but better to just be standard\n      // self.pattern += &#39;([a-zA-Z0-9-_~%!;@=+\\\\$\\\\*\\\\.]+)&#39;;\n      //\n      // See RFC3986, or this handy table:\n      // http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters\n      //\n      self.pattern += &#39;([a-zA-Z0-9-_~\\\\.%]+)&#39;;\n      self.params.push(fragment.slice(1, optional ? -1 : undefined));\n    } else {\n      self.pattern += fragment;\n    }\n\n    if (optional) self.pattern += &#39;?&#39;;\n  });\n\n  if (this.pattern === &#39;^&#39;) this.pattern += &#39;\\\\/&#39;;\n  this.pattern += &#39;$&#39;;\n\n  return this.compile();\n}\n</code></pre><p>});</p><p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>",
+      "summary": "<p>: &#39;\\/+&#39;;</p>",
+      "body": "<pre><code>    if (named) {\n      //\n      // Previously was gratuitous, but better to just be standard\n      // self.pattern += &#39;([a-zA-Z0-9-_~%!;@=+\\\\$\\\\*\\\\.]+)&#39;;\n      //\n      // See RFC3986, or this handy table:\n      // http://en.wikipedia.org/wiki/Percent-encoding#Types_of_URI_characters\n      //\n      self.pattern += &#39;([a-zA-Z0-9-_~\\\\.%]+)&#39;;\n      self.params.push(fragment.slice(1, optional ? -1 : undefined));\n    } else {\n      self.pattern += fragment;\n    }\n\n    if (optional) self.pattern += &#39;?&#39;;\n  });\n\n  if (this.pattern === &#39;^&#39;) this.pattern += &#39;\\\\/&#39;;\n  this.pattern += &#39;$&#39;;\n\n  return this.compile();\n}\n</code></pre><p>});</p><p>/**<br />Compile our dis-assembled source to a new xRegExp instance.</p>"
     },
     "isPrivate": true,
     "ignore": false,
@@ -166,8 +166,8 @@
       }
     ],
     "description": {
-      "full": "<p>Whether or not the route matches the given request's URL.</p>",
-      "summary": "<p>Whether or not the route matches the given request's URL.</p>",
+      "full": "<p>Whether or not the route matches the given request&#39;s URL.</p>",
+      "summary": "<p>Whether or not the route matches the given request&#39;s URL.</p>",
       "body": ""
     },
     "isPrivate": false,
@@ -241,7 +241,7 @@
     },
     "isPrivate": true,
     "ignore": false,
-    "code": "Route.prototype.toString = function toString() {\n  var str = this.url.toString()\n    , opts = [];\n\n  if (this.version) opts.push('version=' + this.version);\n  if (opts.length) str += ' (' + opts.join(', ') + ')';\n\n  return str;\n};\n\nRoute.extend = require('extendable');",
+    "code": "Route.prototype.toString = function toString() {\n  var str = this.url.toString()\n    , opts = [];\n\n  if (this.version) opts.push('version=' + this.version);\n  if (opts.length) str += ' (' + opts.join(', ') + ')';\n\n  return str;\n};\n\nRoute.extend = require('extendible');",
     "ctx": {
       "type": "method",
       "constructor": "Route",
