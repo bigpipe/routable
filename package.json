@@ -24,10 +24,10 @@
     "xregexp": "2.0.x"
   },
   "devDependencies": {
-    "mocha": "1.12.x",
-    "chai": "1.7.x",
+    "mocha": "2.1.x",
+    "assume": "1.1.x",
     "dox": "0.4.x",
-    "ejs": "0.8.x",
-    "pre-commit": "0.0.x"
+    "ejs": "2.2.x",
+    "pre-commit": "1.0.x"
   }
 }

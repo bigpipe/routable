@@ -1,13 +1,8 @@
 describe('Routes', function () {
   'use strict';
 
-  // set up chai, our assertation library
-  var chai = require('chai')
-    , expect = chai.expect;
-
-  chai.Assertion.includeStack = true;
-
-  var Route = require('../');
+  var Route = require('../')
+    , assume = require('assume');
 
   [
     { route: '/404', matches: '/404' }
@@ -24,7 +19,7 @@ describe('Routes', function () {
     it(test.route +' matches against '+ test.matches, function () {
       var r = new Route(test.route);
 
-      expect(r.test(test.matches)).to.equal(true);
+      assume(r.test(test.matches)).to.equal(true);
     });
   });
 });
