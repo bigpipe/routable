@@ -153,7 +153,7 @@ Route.prototype.test = function test(uri) {
 Route.prototype.exec = function exec(uri) {
   var re = xRegExp(this.pattern, this.flags)
     , params = Object.create(null)
-    , result = re.exec(uri)
+    , result = re.xexec(uri)
     , i = 0;
 
   if (!result) return undefined;

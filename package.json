@@ -1,6 +1,6 @@
 {
   "name": "routable",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Route matching and testing, nothing more than that. As simple as it could be.",
   "main": "index.js",
   "scripts": {
