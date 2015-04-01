@@ -61,6 +61,13 @@ describe('Route', function () {
       assume(value.bar).to.equal('banana');
       assume(value.baz).to.equal('potato');
     });
+
+    it('should work with named groups of XRegExp', function () {
+      var r = new Route('/^\\/contact(?<custom>.*)$/');
+      var value = r.exec('/contact/me/on/custom');
+
+      assume(value.custom).to.equal('/me/on/custom');
+    });
   });
 
   describe('#test', function () {
