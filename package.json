@@ -24,14 +24,14 @@
   "license": "MIT",
   "dependencies": {
     "extendible": "0.1.x",
-    "xregexp": "2.0.x"
+    "xregexp": "~3.1.1"
   },
   "devDependencies": {
-    "assume": "1.1.x",
-    "dox": "0.4.x",
-    "ejs": "2.2.x",
-    "istanbul": "0.3.x",
-    "mocha": "2.1.x",
-    "pre-commit": "1.0.x"
+    "assume": "~1.4.1",
+    "dox": "~0.9.0",
+    "ejs": "~2.5.2",
+    "istanbul": "~0.4.5",
+    "mocha": "~3.1.2",
+    "pre-commit": "~1.1.3"
   }
 }
